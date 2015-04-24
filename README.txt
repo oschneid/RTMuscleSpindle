@@ -4,6 +4,10 @@ This is an implementation of Mileusnic et al's model of the Muscle Spindle [1] i
 It includes the model, a test script, and an interactive GUI that allows direct manipulation of the model.
 It is provided as-is under the MIT License (LICENSE). If you have any questions, please contact the author.
 
+You can find more details in RTMuscleSpindle.pdf, a technical report explaining this system and providing background information. If you use this system in an academic application, please cite as:
+
+Oliver S. Schneider. An Interactive Simulation of the Muscle Spindle. UBC Technical Report, 2015.
+
 
 
 HOW TO RUN
