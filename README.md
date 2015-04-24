@@ -2,7 +2,7 @@
 
 This is an implementation of Mileusnic et al's model of the Muscle Spindle [1] in Matlab/Simulink.
 It includes the model, a test script, and an interactive GUI that allows direct manipulation of the model.
-It is provided as-is under the MIT License (LICENSE.txt). If you have any questions, please contact the author.
+It is provided as-is under the MIT License (LICENSE). If you have any questions, please contact the author.
 
 
 # How to run
