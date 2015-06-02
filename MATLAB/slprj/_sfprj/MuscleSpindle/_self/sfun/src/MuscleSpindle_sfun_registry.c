@@ -1,5 +1,9 @@
 #include "MuscleSpindle_sfun.h"
 #include "sfcdebug.h"
+
+struct SfDebugInstanceStruct;
+struct SfDebugInstanceStruct* sfGlobalDebugInstanceStruct = NULL;
+
 #define PROCESS_MEX_SFUNCTION_CMD_LINE_CALL
 
 unsigned int sf_process_check_sum_call( int nlhs, mxArray * plhs[], int nrhs,
@@ -38,6 +42,37 @@ unsigned int sf_process_autoinheritance_call( int nlhs, mxArray * plhs[], int
     newRhs[1] = prhs[2];
     newRhs[2] = prhs[3];
     return sf_MuscleSpindle_autoinheritance_info(nlhs,plhs,3,newRhs);
+  }
+
+  return 0;
+}
+
+unsigned int sf_process_get_third_party_uses_info_call( int nlhs, mxArray *
+  plhs[], int nrhs, const mxArray * prhs[] )
+{
+  extern unsigned int sf_MuscleSpindle_third_party_uses_info( int nlhs, mxArray *
+    plhs[], int nrhs, const mxArray * prhs[] );
+  char commandName[64];
+  char machineName[128];
+  if (nrhs < 4) {
+    return 0;
+  }
+
+  if (!mxIsChar(prhs[0]) || !mxIsChar(prhs[1]))
+    return 0;
+  mxGetString(prhs[0], commandName,sizeof(commandName)/sizeof(char));
+  commandName[(sizeof(commandName)/sizeof(char)-1)] = '\0';
+  if (strcmp(commandName,"get_third_party_uses_info"))
+    return 0;
+  mxGetString(prhs[1], machineName,sizeof(machineName)/sizeof(char));
+  machineName[(sizeof(machineName)/sizeof(char)-1)] = '\0';
+  if (strcmp(machineName, "MuscleSpindle") == 0) {
+    const mxArray *newRhs[3] = { NULL, NULL, NULL };
+
+    newRhs[0] = prhs[0];
+    newRhs[1] = prhs[2];
+    newRhs[2] = prhs[3];
+    return sf_MuscleSpindle_third_party_uses_info(nlhs,plhs,3,newRhs);
   }
 
   return 0;
@@ -92,12 +127,18 @@ unsigned int sf_mex_unlock_call( int nlhs, mxArray * plhs[], int nrhs, const
   return(1);
 }
 
-extern unsigned int sf_debug_api( int nlhs, mxArray * plhs[], int nrhs, const
-  mxArray * prhs[] );
+extern unsigned int sf_debug_api(struct SfDebugInstanceStruct* debugInstance,
+  int nlhs, mxArray * plhs[], int nrhs, const mxArray * prhs[] );
+static unsigned int sf_debug_api_wrapper( int nlhs, mxArray * plhs[], int nrhs,
+  const mxArray * prhs[] )
+{
+  return sf_debug_api(sfGlobalDebugInstanceStruct, nlhs, plhs, nrhs, prhs);
+}
+
 static unsigned int ProcessMexSfunctionCmdLineCall(int nlhs, mxArray * plhs[],
   int nrhs, const mxArray * prhs[])
 {
-  if (sf_debug_api(nlhs,plhs,nrhs,prhs))
+  if (sf_debug_api_wrapper(nlhs,plhs,nrhs,prhs))
     return 1;
   if (sf_process_check_sum_call(nlhs,plhs,nrhs,prhs))
     return 1;
@@ -105,17 +146,18 @@ static unsigned int ProcessMexSfunctionCmdLineCall(int nlhs, mxArray * plhs[],
     return 1;
   if (sf_process_autoinheritance_call(nlhs,plhs,nrhs,prhs))
     return 1;
+  if (sf_process_get_third_party_uses_info_call(nlhs,plhs,nrhs,prhs))
+    return 1;
   if (sf_process_get_eml_resolved_functions_info_call(nlhs,plhs,nrhs,prhs))
     return 1;
   mexErrMsgTxt("Unsuccessful command.");
   return 0;
 }
 
-static unsigned int sfMachineGlobalTerminatorCallable = 0;
-static unsigned int sfMachineGlobalInitializerCallable = 1;
+static unsigned int sfGlobalMdlStartCallCounts = 0;
 unsigned int sf_machine_global_initializer_called(void)
 {
-  return(!sfMachineGlobalInitializerCallable);
+  return(sfGlobalMdlStartCallCounts > 0);
 }
 
 extern unsigned int sf_MuscleSpindle_method_dispatcher(SimStruct *S, unsigned
@@ -135,11 +177,11 @@ unsigned int sf_machine_global_method_dispatcher(SimStruct *simstructPtr, const
 extern void MuscleSpindle_terminator(void);
 void sf_machine_global_terminator(void)
 {
-  if (sfMachineGlobalTerminatorCallable) {
-    sfMachineGlobalTerminatorCallable = 0;
-    sfMachineGlobalInitializerCallable = 1;
+  sfGlobalMdlStartCallCounts--;
+  if (sfGlobalMdlStartCallCounts == 0) {
     MuscleSpindle_terminator();
-    sf_debug_terminate();
+    sf_debug_terminate(sfGlobalDebugInstanceStruct);
+    sfGlobalDebugInstanceStruct = NULL;
   }
 
   return;
@@ -147,7 +189,7 @@ void sf_machine_global_terminator(void)
 
 extern void MuscleSpindle_initializer(void);
 extern void MuscleSpindle_register_exported_symbols(SimStruct* S);
-extern void MuscleSpindle_debug_initialize(void);
+extern void MuscleSpindle_debug_initialize(struct SfDebugInstanceStruct*);
 void sf_register_machine_exported_symbols(SimStruct* S)
 {
   MuscleSpindle_register_exported_symbols(S);
@@ -161,15 +203,15 @@ bool callCustomFcn(char initFlag)
 void sf_machine_global_initializer(SimStruct* S)
 {
   bool simModeIsRTWGen = sim_mode_is_rtw_gen(S);
-  if (sfMachineGlobalInitializerCallable) {
-    sfMachineGlobalInitializerCallable = 0;
-    sfMachineGlobalTerminatorCallable = 1;
+  sfGlobalMdlStartCallCounts++;
+  if (sfGlobalMdlStartCallCounts == 1) {
     if (simModeIsRTWGen) {
       sf_register_machine_exported_symbols(S);
     }
 
+    sfGlobalDebugInstanceStruct = sf_debug_create_debug_instance_struct();
     if (!simModeIsRTWGen) {
-      MuscleSpindle_debug_initialize();
+      MuscleSpindle_debug_initialize(sfGlobalDebugInstanceStruct);
     }
 
     MuscleSpindle_initializer();

@@ -7,6 +7,9 @@
 #include "rtwtypes.h"
 
 /* Type Definitions */
+#ifndef typedef_c5_ResolvedFunctionInfo
+#define typedef_c5_ResolvedFunctionInfo
+
 typedef struct {
   const char * context;
   const char * name;
@@ -18,16 +21,23 @@ typedef struct {
   uint32_T mFileTimeHi;
 } c5_ResolvedFunctionInfo;
 
+#endif                                 /*typedef_c5_ResolvedFunctionInfo*/
+
+#ifndef typedef_SFc5_MuscleSpindleInstanceStruct
+#define typedef_SFc5_MuscleSpindleInstanceStruct
+
 typedef struct {
-  int32_T c5_sfEvent;
-  boolean_T c5_isStable;
-  boolean_T c5_doneDoubleBufferReInit;
-  uint8_T c5_is_active_c5_MuscleSpindle;
   SimStruct *S;
   ChartInfoStruct chartInfo;
   uint32_T chartNumber;
   uint32_T instanceNumber;
+  int32_T c5_sfEvent;
+  boolean_T c5_isStable;
+  boolean_T c5_doneDoubleBufferReInit;
+  uint8_T c5_is_active_c5_MuscleSpindle;
 } SFc5_MuscleSpindleInstanceStruct;
+
+#endif                                 /*typedef_SFc5_MuscleSpindleInstanceStruct*/
 
 /* Named Constants */
 

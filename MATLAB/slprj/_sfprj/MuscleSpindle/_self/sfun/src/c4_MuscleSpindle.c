@@ -1,11 +1,13 @@
 /* Include files */
 
-#include "blascompat32.h"
+#include <stddef.h>
+#include "blas.h"
 #include "MuscleSpindle_sfun.h"
 #include "c4_MuscleSpindle.h"
 #define CHARTINSTANCE_CHARTNUMBER      (chartInstance->chartNumber)
 #define CHARTINSTANCE_INSTANCENUMBER   (chartInstance->instanceNumber)
 #include "MuscleSpindle_sfun_debug_macros.h"
+#define _SF_MEX_LISTEN_FOR_CTRL_C(S)   sf_mex_listen_for_ctrl_c(sfGlobalDebugInstanceStruct,S);
 
 /* Type Definitions */
 
@@ -38,6 +40,8 @@ static void finalize_c4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct
   *chartInstance);
 static void sf_c4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct *chartInstance);
 static void initSimStructsc4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct
+  *chartInstance);
+static void registerMessagesc4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct
   *chartInstance);
 static void init_script_number_translation(uint32_T c4_machineNumber, uint32_T
   c4_chartNumber);
@@ -274,29 +278,29 @@ static void sf_c4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct *chartInstance)
   c4_Lpr0 = c4_h_hoistedGlobal;
   c4_LprN = c4_i_hoistedGlobal;
   c4_L = c4_j_hoistedGlobal;
-  sf_debug_symbol_scope_push_eml(0U, 16U, 16U, c4_debug_family_names,
+  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 16U, 16U, c4_debug_family_names,
     c4_debug_family_var_map);
-  sf_debug_symbol_scope_add_eml_importable(&c4_term1, 0U, c4_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_term1, 0U, c4_sf_marshallOut,
     c4_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c4_term2, 1U, c4_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_term2, 1U, c4_sf_marshallOut,
     c4_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c4_term, 2U, c4_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_term, 2U, c4_sf_marshallOut,
     c4_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c4_nargin, 3U, c4_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_nargin, 3U, c4_sf_marshallOut,
     c4_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c4_nargout, 4U, c4_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_nargout, 4U, c4_sf_marshallOut,
     c4_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml(&c4_Gsnd, 5U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_T, 6U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_Ksr, 7U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_X, 8U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_Lsnd, 9U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_Lsr0, 10U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_LsrN, 11U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_Lpr0, 12U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_LprN, 13U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c4_L, 14U, c4_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml_importable(&c4_ScndryAffrntCntrbtn, 15U,
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_Gsnd, 5U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_T, 6U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_Ksr, 7U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_X, 8U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_Lsnd, 9U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_Lsr0, 10U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_LsrN, 11U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_Lpr0, 12U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_LprN, 13U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c4_L, 14U, c4_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c4_ScndryAffrntCntrbtn, 15U,
     c4_sf_marshallOut, c4_sf_marshallIn);
   CV_EML_FCN(0, 0);
   _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, 3);
@@ -348,14 +352,19 @@ static void sf_c4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct *chartInstance)
   c4_e_b = c4_term;
   c4_ScndryAffrntCntrbtn = c4_e_a * c4_e_b;
   _SFD_EML_CALL(0U, chartInstance->c4_sfEvent, -9);
-  sf_debug_symbol_scope_pop();
+  _SFD_SYMBOL_SCOPE_POP();
   *c4_b_ScndryAffrntCntrbtn = c4_ScndryAffrntCntrbtn;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 3U, chartInstance->c4_sfEvent);
-  sf_debug_check_for_state_inconsistency(_MuscleSpindleMachineNumber_,
+  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_MuscleSpindleMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
 }
 
 static void initSimStructsc4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct
+  *chartInstance)
+{
+}
+
+static void registerMessagesc4_MuscleSpindle(SFc4_MuscleSpindleInstanceStruct
   *chartInstance)
 {
 }
@@ -428,54 +437,64 @@ static void c4_sf_marshallIn(void *chartInstanceVoid, const mxArray
 const mxArray *sf_c4_MuscleSpindle_get_eml_resolved_functions_info(void)
 {
   const mxArray *c4_nameCaptureInfo;
-  c4_ResolvedFunctionInfo c4_info[4];
-  c4_ResolvedFunctionInfo (*c4_b_info)[4];
+  c4_ResolvedFunctionInfo c4_info[5];
+  c4_ResolvedFunctionInfo (*c4_b_info)[5];
   const mxArray *c4_m0 = NULL;
   int32_T c4_i0;
   c4_ResolvedFunctionInfo *c4_r0;
   c4_nameCaptureInfo = NULL;
   c4_nameCaptureInfo = NULL;
-  c4_b_info = (c4_ResolvedFunctionInfo (*)[4])c4_info;
+  c4_b_info = (c4_ResolvedFunctionInfo (*)[5])c4_info;
   (*c4_b_info)[0].context = "";
   (*c4_b_info)[0].name = "mrdivide";
   (*c4_b_info)[0].dominantType = "double";
   (*c4_b_info)[0].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  (*c4_b_info)[0].fileTimeLo = 1325156538U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  (*c4_b_info)[0].fileTimeLo = 1357947948U;
   (*c4_b_info)[0].fileTimeHi = 0U;
-  (*c4_b_info)[0].mFileTimeLo = 1319762366U;
+  (*c4_b_info)[0].mFileTimeLo = 1319726366U;
   (*c4_b_info)[0].mFileTimeHi = 0U;
   (*c4_b_info)[1].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mrdivide.p";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
   (*c4_b_info)[1].name = "rdivide";
   (*c4_b_info)[1].dominantType = "double";
   (*c4_b_info)[1].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c4_b_info)[1].fileTimeLo = 1286851244U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c4_b_info)[1].fileTimeLo = 1346506788U;
   (*c4_b_info)[1].fileTimeHi = 0U;
   (*c4_b_info)[1].mFileTimeLo = 0U;
   (*c4_b_info)[1].mFileTimeHi = 0U;
   (*c4_b_info)[2].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/rdivide.m";
-  (*c4_b_info)[2].name = "eml_div";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c4_b_info)[2].name = "eml_scalexp_compatible";
   (*c4_b_info)[2].dominantType = "double";
   (*c4_b_info)[2].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/eml/eml_div.m";
-  (*c4_b_info)[2].fileTimeLo = 1313380210U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
+  (*c4_b_info)[2].fileTimeLo = 1286815196U;
   (*c4_b_info)[2].fileTimeHi = 0U;
   (*c4_b_info)[2].mFileTimeLo = 0U;
   (*c4_b_info)[2].mFileTimeHi = 0U;
-  (*c4_b_info)[3].context = "";
-  (*c4_b_info)[3].name = "mtimes";
+  (*c4_b_info)[3].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  (*c4_b_info)[3].name = "eml_div";
   (*c4_b_info)[3].dominantType = "double";
   (*c4_b_info)[3].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mtimes.m";
-  (*c4_b_info)[3].fileTimeLo = 1289552092U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  (*c4_b_info)[3].fileTimeLo = 1313344210U;
   (*c4_b_info)[3].fileTimeHi = 0U;
   (*c4_b_info)[3].mFileTimeLo = 0U;
   (*c4_b_info)[3].mFileTimeHi = 0U;
-  sf_mex_assign(&c4_m0, sf_mex_createstruct("nameCaptureInfo", 1, 4), FALSE);
-  for (c4_i0 = 0; c4_i0 < 4; c4_i0++) {
+  (*c4_b_info)[4].context = "";
+  (*c4_b_info)[4].name = "mtimes";
+  (*c4_b_info)[4].dominantType = "double";
+  (*c4_b_info)[4].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  (*c4_b_info)[4].fileTimeLo = 1289516092U;
+  (*c4_b_info)[4].fileTimeHi = 0U;
+  (*c4_b_info)[4].mFileTimeLo = 0U;
+  (*c4_b_info)[4].mFileTimeHi = 0U;
+  sf_mex_assign(&c4_m0, sf_mex_createstruct("nameCaptureInfo", 1, 5), FALSE);
+  for (c4_i0 = 0; c4_i0 < 5; c4_i0++) {
     c4_r0 = &c4_info[c4_i0];
     sf_mex_addfield(c4_m0, sf_mex_create("nameCaptureInfo", c4_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c4_r0->context)), "context", "nameCaptureInfo",
@@ -581,12 +600,32 @@ static void init_dsm_address_info(SFc4_MuscleSpindleInstanceStruct
 }
 
 /* SFunction Glue Code */
+#ifdef utFree
+#undef utFree
+#endif
+
+#ifdef utMalloc
+#undef utMalloc
+#endif
+
+#ifdef __cplusplus
+
+extern "C" void *utMalloc(size_t size);
+extern "C" void utFree(void*);
+
+#else
+
+extern void *utMalloc(size_t size);
+extern void utFree(void*);
+
+#endif
+
 void sf_c4_MuscleSpindle_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3638660298U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2400816865U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1468737207U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(1381295768U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2927169710U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3875967505U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2948318806U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2847105181U);
 }
 
 mxArray *sf_c4_MuscleSpindle_get_autoinheritance_info(void)
@@ -598,7 +637,7 @@ mxArray *sf_c4_MuscleSpindle_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("Q7vnilCGC3xeaHVuEoVVfG");
+    mxArray *mxChecksum = mxCreateString("6MdPBYbz53whJT5GuBWJbE");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -837,6 +876,12 @@ mxArray *sf_c4_MuscleSpindle_get_autoinheritance_info(void)
   return(mxAutoinheritanceInfo);
 }
 
+mxArray *sf_c4_MuscleSpindle_third_party_uses_info(void)
+{
+  mxArray * mxcell3p = mxCreateCellMatrix(1,0);
+  return(mxcell3p);
+}
+
 static const mxArray *sf_get_sim_state_info_c4_MuscleSpindle(void)
 {
   const char *infoFields[] = { "chartChecksum", "varInfo" };
@@ -866,7 +911,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
       {
         unsigned int chartAlreadyPresent;
         chartAlreadyPresent = sf_debug_initialize_chart
-          (_MuscleSpindleMachineNumber_,
+          (sfGlobalDebugInstanceStruct,
+           _MuscleSpindleMachineNumber_,
            4,
            1,
            1,
@@ -885,8 +931,10 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           init_script_number_translation(_MuscleSpindleMachineNumber_,
             chartInstance->chartNumber);
           sf_debug_set_chart_disable_implicit_casting
-            (_MuscleSpindleMachineNumber_,chartInstance->chartNumber,1);
-          sf_debug_set_chart_event_thresholds(_MuscleSpindleMachineNumber_,
+            (sfGlobalDebugInstanceStruct,_MuscleSpindleMachineNumber_,
+             chartInstance->chartNumber,1);
+          sf_debug_set_chart_event_thresholds(sfGlobalDebugInstanceStruct,
+            _MuscleSpindleMachineNumber_,
             chartInstance->chartNumber,
             0,
             0,
@@ -916,7 +964,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         _SFD_CV_INIT_TRANS(0,0,NULL,NULL,0,NULL);
 
         /* Initialization of MATLAB Function Model Coverage */
-        _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0);
+        _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
         _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,372);
         _SFD_TRANS_COV_WTS(0,0,0,1,0);
         if (chartAlreadyPresent==0) {
@@ -988,15 +1036,16 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         }
       }
     } else {
-      sf_debug_reset_current_state_configuration(_MuscleSpindleMachineNumber_,
-        chartInstance->chartNumber,chartInstance->instanceNumber);
+      sf_debug_reset_current_state_configuration(sfGlobalDebugInstanceStruct,
+        _MuscleSpindleMachineNumber_,chartInstance->chartNumber,
+        chartInstance->instanceNumber);
     }
   }
 }
 
-static const char* sf_get_instance_specialization()
+static const char* sf_get_instance_specialization(void)
 {
-  return "4AIp75LcIllG7UOnkZHcRB";
+  return "EIegXK4lrHvNN24BpctGtD";
 }
 
 static void sf_opaque_initialize_c4_MuscleSpindle(void *chartInstanceVar)
@@ -1091,15 +1140,14 @@ static void sf_opaque_terminate_c4_MuscleSpindle(void *chartInstanceVar)
     SimStruct *S = ((SFc4_MuscleSpindleInstanceStruct*) chartInstanceVar)->S;
     if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
       sf_clear_rtw_identifier(S);
+      unload_MuscleSpindle_optimization_info();
     }
 
     finalize_c4_MuscleSpindle((SFc4_MuscleSpindleInstanceStruct*)
       chartInstanceVar);
-    free((void *)chartInstanceVar);
+    utFree((void *)chartInstanceVar);
     ssSetUserData(S,NULL);
   }
-
-  unload_MuscleSpindle_optimization_info();
 }
 
 static void sf_opaque_init_subchart_simstructs(void *chartInstanceVar)
@@ -1139,6 +1187,7 @@ static void mdlSetWorkWidths_c4_MuscleSpindle(SimStruct *S)
     ssSetNotMultipleInlinable(S,sf_rtw_info_uint_prop(S,
       sf_get_instance_specialization(),infoStruct,4,
       "gatewayCannotBeInlinedMultipleTimes"));
+    sf_update_buildInfo(S,sf_get_instance_specialization(),infoStruct,4);
     if (chartIsInlinable) {
       ssSetInputPortOptimOpts(S, 0, SS_REUSABLE_AND_LOCAL);
       ssSetInputPortOptimOpts(S, 1, SS_REUSABLE_AND_LOCAL);
@@ -1156,18 +1205,33 @@ static void mdlSetWorkWidths_c4_MuscleSpindle(SimStruct *S)
         infoStruct,4,1);
     }
 
+    {
+      unsigned int outPortIdx;
+      for (outPortIdx=1; outPortIdx<=1; ++outPortIdx) {
+        ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
+      }
+    }
+
+    {
+      unsigned int inPortIdx;
+      for (inPortIdx=0; inPortIdx < 10; ++inPortIdx) {
+        ssSetInputPortOptimizeInIR(S, inPortIdx, 1U);
+      }
+    }
+
     sf_set_rtw_dwork_info(S,sf_get_instance_specialization(),infoStruct,4);
     ssSetHasSubFunctions(S,!(chartIsInlinable));
   } else {
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(3572149463U));
-  ssSetChecksum1(S,(3582085775U));
-  ssSetChecksum2(S,(4270967315U));
-  ssSetChecksum3(S,(610484590U));
+  ssSetChecksum0(S,(3271247123U));
+  ssSetChecksum1(S,(2205023528U));
+  ssSetChecksum2(S,(1044813094U));
+  ssSetChecksum3(S,(4222593174U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
+  ssSupportsMultipleExecInstances(S,1);
 }
 
 static void mdlRTW_c4_MuscleSpindle(SimStruct *S)
@@ -1180,7 +1244,7 @@ static void mdlRTW_c4_MuscleSpindle(SimStruct *S)
 static void mdlStart_c4_MuscleSpindle(SimStruct *S)
 {
   SFc4_MuscleSpindleInstanceStruct *chartInstance;
-  chartInstance = (SFc4_MuscleSpindleInstanceStruct *)malloc(sizeof
+  chartInstance = (SFc4_MuscleSpindleInstanceStruct *)utMalloc(sizeof
     (SFc4_MuscleSpindleInstanceStruct));
   memset(chartInstance, 0, sizeof(SFc4_MuscleSpindleInstanceStruct));
   if (chartInstance==NULL) {

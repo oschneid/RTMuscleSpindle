@@ -1,6 +1,7 @@
 /* Include files */
 
 #include "MuscleSpindle_sfun.h"
+#include "MuscleSpindle_sfun_debug_macros.h"
 #include "c1_MuscleSpindle.h"
 #include "c2_MuscleSpindle.h"
 #include "c3_MuscleSpindle.h"
@@ -80,20 +81,20 @@ unsigned int sf_MuscleSpindle_process_check_sum_call( int nlhs, mxArray * plhs[]
     mxGetString(prhs[1], commandName,sizeof(commandName)/sizeof(char));
     commandName[(sizeof(commandName)/sizeof(char)-1)] = '\0';
     if (!strcmp(commandName,"machine")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1108763250U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2041557885U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2760466800U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(4254415435U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1545794978U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3565728260U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(790789815U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(38263849U);
     } else if (!strcmp(commandName,"exportedFcn")) {
       ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(0U);
       ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0U);
     } else if (!strcmp(commandName,"makefile")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2787009714U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2983074703U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(3089580986U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2791289632U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3327638175U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(1431208774U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1185588925U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(1874830706U);
     } else if (nrhs==3 && !strcmp(commandName,"chart")) {
       unsigned int chartFileNumber;
       chartFileNumber = (unsigned int)mxGetScalar(prhs[2]);
@@ -140,18 +141,18 @@ unsigned int sf_MuscleSpindle_process_check_sum_call( int nlhs, mxArray * plhs[]
         ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(0.0);
       }
     } else if (!strcmp(commandName,"target")) {
-      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1764838350U);
-      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3410240878U);
-      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(118138738U);
-      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(243351119U);
+      ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3564696471U);
+      ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(678668628U);
+      ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1090454852U);
+      ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3896867807U);
     } else {
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2635135688U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3882322299U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2060795262U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3032829189U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3987699269U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3338214368U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(719902230U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(149836584U);
   }
 
   return 1;
@@ -189,7 +190,7 @@ unsigned int sf_MuscleSpindle_autoinheritance_info( int nlhs, mxArray * plhs[],
     switch (chartFileNumber) {
      case 1:
       {
-        if (strcmp(aiChksum, "xDnnGj7T4ueVOH7NVCE1mD") == 0) {
+        if (strcmp(aiChksum, "ww8NqEKWGCNBxeBEMAhny") == 0) {
           extern mxArray *sf_c1_MuscleSpindle_get_autoinheritance_info(void);
           plhs[0] = sf_c1_MuscleSpindle_get_autoinheritance_info();
           break;
@@ -201,7 +202,7 @@ unsigned int sf_MuscleSpindle_autoinheritance_info( int nlhs, mxArray * plhs[],
 
      case 2:
       {
-        if (strcmp(aiChksum, "7Epm3D04SGhkoANuUOnVaF") == 0) {
+        if (strcmp(aiChksum, "8Dr9owGEF7LDFB9VDrdquF") == 0) {
           extern mxArray *sf_c2_MuscleSpindle_get_autoinheritance_info(void);
           plhs[0] = sf_c2_MuscleSpindle_get_autoinheritance_info();
           break;
@@ -213,7 +214,7 @@ unsigned int sf_MuscleSpindle_autoinheritance_info( int nlhs, mxArray * plhs[],
 
      case 3:
       {
-        if (strcmp(aiChksum, "Q7vnilCGC3xeaHVuEoVVfG") == 0) {
+        if (strcmp(aiChksum, "6MdPBYbz53whJT5GuBWJbE") == 0) {
           extern mxArray *sf_c3_MuscleSpindle_get_autoinheritance_info(void);
           plhs[0] = sf_c3_MuscleSpindle_get_autoinheritance_info();
           break;
@@ -225,7 +226,7 @@ unsigned int sf_MuscleSpindle_autoinheritance_info( int nlhs, mxArray * plhs[],
 
      case 4:
       {
-        if (strcmp(aiChksum, "Q7vnilCGC3xeaHVuEoVVfG") == 0) {
+        if (strcmp(aiChksum, "6MdPBYbz53whJT5GuBWJbE") == 0) {
           extern mxArray *sf_c4_MuscleSpindle_get_autoinheritance_info(void);
           plhs[0] = sf_c4_MuscleSpindle_get_autoinheritance_info();
           break;
@@ -237,7 +238,7 @@ unsigned int sf_MuscleSpindle_autoinheritance_info( int nlhs, mxArray * plhs[],
 
      case 5:
       {
-        if (strcmp(aiChksum, "xDnnGj7T4ueVOH7NVCE1mD") == 0) {
+        if (strcmp(aiChksum, "ww8NqEKWGCNBxeBEMAhny") == 0) {
           extern mxArray *sf_c5_MuscleSpindle_get_autoinheritance_info(void);
           plhs[0] = sf_c5_MuscleSpindle_get_autoinheritance_info();
           break;
@@ -352,12 +353,87 @@ unsigned int sf_MuscleSpindle_get_eml_resolved_functions_info( int nlhs, mxArray
 
 }
 
-void MuscleSpindle_debug_initialize(void)
+unsigned int sf_MuscleSpindle_third_party_uses_info( int nlhs, mxArray * plhs[],
+  int nrhs, const mxArray * prhs[] )
 {
-  _MuscleSpindleMachineNumber_ = sf_debug_initialize_machine("MuscleSpindle",
-    "sfun",0,5,0,0,0);
-  sf_debug_set_machine_event_thresholds(_MuscleSpindleMachineNumber_,0,0);
-  sf_debug_set_machine_data_thresholds(_MuscleSpindleMachineNumber_,0);
+  char commandName[64];
+  char tpChksum[64];
+  if (nrhs<3 || !mxIsChar(prhs[0]))
+    return 0;
+
+  /* Possible call to get the third_party_uses_info */
+  mxGetString(prhs[0], commandName,sizeof(commandName)/sizeof(char));
+  commandName[(sizeof(commandName)/sizeof(char)-1)] = '\0';
+  mxGetString(prhs[2], tpChksum,sizeof(tpChksum)/sizeof(char));
+  tpChksum[(sizeof(tpChksum)/sizeof(char)-1)] = '\0';
+  if (strcmp(commandName,"get_third_party_uses_info"))
+    return 0;
+
+  {
+    unsigned int chartFileNumber;
+    chartFileNumber = (unsigned int)mxGetScalar(prhs[1]);
+    switch (chartFileNumber) {
+     case 1:
+      {
+        if (strcmp(tpChksum, "nzeVWmC3UM9JgQUxVD8bGF") == 0) {
+          extern mxArray *sf_c1_MuscleSpindle_third_party_uses_info(void);
+          plhs[0] = sf_c1_MuscleSpindle_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 2:
+      {
+        if (strcmp(tpChksum, "dkEDKYu5K2XI8jBbmLQ2HF") == 0) {
+          extern mxArray *sf_c2_MuscleSpindle_third_party_uses_info(void);
+          plhs[0] = sf_c2_MuscleSpindle_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 3:
+      {
+        if (strcmp(tpChksum, "EIegXK4lrHvNN24BpctGtD") == 0) {
+          extern mxArray *sf_c3_MuscleSpindle_third_party_uses_info(void);
+          plhs[0] = sf_c3_MuscleSpindle_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 4:
+      {
+        if (strcmp(tpChksum, "EIegXK4lrHvNN24BpctGtD") == 0) {
+          extern mxArray *sf_c4_MuscleSpindle_third_party_uses_info(void);
+          plhs[0] = sf_c4_MuscleSpindle_third_party_uses_info();
+          break;
+        }
+      }
+
+     case 5:
+      {
+        if (strcmp(tpChksum, "nzeVWmC3UM9JgQUxVD8bGF") == 0) {
+          extern mxArray *sf_c5_MuscleSpindle_third_party_uses_info(void);
+          plhs[0] = sf_c5_MuscleSpindle_third_party_uses_info();
+          break;
+        }
+      }
+
+     default:
+      plhs[0] = mxCreateDoubleMatrix(0,0,mxREAL);
+    }
+  }
+
+  return 1;
+}
+
+void MuscleSpindle_debug_initialize(struct SfDebugInstanceStruct* debugInstance)
+{
+  _MuscleSpindleMachineNumber_ = sf_debug_initialize_machine(debugInstance,
+    "MuscleSpindle","sfun",0,5,0,0,0);
+  sf_debug_set_machine_event_thresholds(debugInstance,
+    _MuscleSpindleMachineNumber_,0,0);
+  sf_debug_set_machine_data_thresholds(debugInstance,
+    _MuscleSpindleMachineNumber_,0);
 }
 
 void MuscleSpindle_register_exported_symbols(SimStruct* S)

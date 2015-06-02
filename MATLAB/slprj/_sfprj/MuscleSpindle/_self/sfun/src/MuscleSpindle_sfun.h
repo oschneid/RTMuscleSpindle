@@ -13,6 +13,9 @@
 #define rtIsNaN(X)                     ((int)mxIsNaN(X))
 #define rtIsInf(X)                     ((int)mxIsInf(X))
 
+struct SfDebugInstanceStruct;
+extern struct SfDebugInstanceStruct* sfGlobalDebugInstanceStruct;
+
 /* Type Definitions */
 
 /* Named Constants */

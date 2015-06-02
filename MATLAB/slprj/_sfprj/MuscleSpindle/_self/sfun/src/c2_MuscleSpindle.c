@@ -1,12 +1,14 @@
 /* Include files */
 
-#include "blascompat32.h"
+#include <stddef.h>
+#include "blas.h"
 #include "MuscleSpindle_sfun.h"
 #include "c2_MuscleSpindle.h"
 #include "mwmathutil.h"
 #define CHARTINSTANCE_CHARTNUMBER      (chartInstance->chartNumber)
 #define CHARTINSTANCE_INSTANCENUMBER   (chartInstance->instanceNumber)
 #include "MuscleSpindle_sfun_debug_macros.h"
+#define _SF_MEX_LISTEN_FOR_CTRL_C(S)   sf_mex_listen_for_ctrl_c(sfGlobalDebugInstanceStruct,S);
 
 /* Type Definitions */
 
@@ -40,6 +42,8 @@ static void finalize_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct
 static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance);
 static void initSimStructsc2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct
   *chartInstance);
+static void registerMessagesc2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct
+  *chartInstance);
 static void init_script_number_translation(uint32_T c2_machineNumber, uint32_T
   c2_chartNumber);
 static const mxArray *c2_sf_marshallOut(void *chartInstanceVoid, void *c2_inData);
@@ -49,7 +53,8 @@ static real_T c2_b_emlrt_marshallIn(SFc2_MuscleSpindleInstanceStruct
   *chartInstance, const mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId);
 static void c2_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c2_mxArrayInData, const char_T *c2_varName, void *c2_outData);
-static void c2_info_helper(c2_ResolvedFunctionInfo c2_info[14]);
+static void c2_info_helper(c2_ResolvedFunctionInfo c2_info[17]);
+static void c2_eml_scalar_eg(SFc2_MuscleSpindleInstanceStruct *chartInstance);
 static void c2_eml_error(SFc2_MuscleSpindleInstanceStruct *chartInstance);
 static const mxArray *c2_b_sf_marshallOut(void *chartInstanceVoid, void
   *c2_inData);
@@ -230,30 +235,36 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   real_T c2_c_b;
   real_T c2_e_a;
   real_T c2_d_b;
+  real_T c2_f_a;
+  real_T c2_e_b;
   real_T c2_ak;
   real_T c2_bk;
   real_T c2_m_x;
   real_T c2_n_x;
-  real_T c2_c;
-  real_T c2_f_a;
-  real_T c2_e_b;
-  real_T c2_p_y;
   real_T c2_g_a;
   real_T c2_f_b;
-  real_T c2_q_y;
+  real_T c2_ar;
+  real_T c2_br;
+  real_T c2_c;
   real_T c2_h_a;
   real_T c2_g_b;
-  real_T c2_r_y;
+  real_T c2_p_y;
   real_T c2_i_a;
   real_T c2_h_b;
-  real_T c2_s_y;
+  real_T c2_q_y;
   real_T c2_j_a;
   real_T c2_i_b;
+  real_T c2_r_y;
+  real_T c2_k_a;
+  real_T c2_j_b;
+  real_T c2_s_y;
+  real_T c2_l_a;
+  real_T c2_k_b;
   real_T *c2_b_Gamma;
   real_T *c2_b_Lpr0;
   real_T *c2_b_Kpr;
   real_T *c2_b_R;
-  real_T *c2_k_a;
+  real_T *c2_m_a;
   real_T *c2_b_Beta;
   real_T *c2_b_C;
   real_T *c2_b_M;
@@ -269,7 +280,7 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   c2_b_Lpr0 = (real_T *)ssGetInputPortSignal(chartInstance->S, 13);
   c2_b_Kpr = (real_T *)ssGetInputPortSignal(chartInstance->S, 12);
   c2_b_R = (real_T *)ssGetInputPortSignal(chartInstance->S, 11);
-  c2_k_a = (real_T *)ssGetInputPortSignal(chartInstance->S, 10);
+  c2_m_a = (real_T *)ssGetInputPortSignal(chartInstance->S, 10);
   c2_b_Beta = (real_T *)ssGetInputPortSignal(chartInstance->S, 9);
   c2_b_C = (real_T *)ssGetInputPortSignal(chartInstance->S, 8);
   c2_b_M = (real_T *)ssGetInputPortSignal(chartInstance->S, 7);
@@ -294,7 +305,7 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   _SFD_DATA_RANGE_CHECK(*c2_b_M, 8U);
   _SFD_DATA_RANGE_CHECK(*c2_b_C, 9U);
   _SFD_DATA_RANGE_CHECK(*c2_b_Beta, 10U);
-  _SFD_DATA_RANGE_CHECK(*c2_k_a, 11U);
+  _SFD_DATA_RANGE_CHECK(*c2_m_a, 11U);
   _SFD_DATA_RANGE_CHECK(*c2_b_R, 12U);
   _SFD_DATA_RANGE_CHECK(*c2_b_Kpr, 13U);
   _SFD_DATA_RANGE_CHECK(*c2_b_Lpr0, 14U);
@@ -311,7 +322,7 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   c2_h_hoistedGlobal = *c2_b_M;
   c2_i_hoistedGlobal = *c2_b_C;
   c2_j_hoistedGlobal = *c2_b_Beta;
-  c2_k_hoistedGlobal = *c2_k_a;
+  c2_k_hoistedGlobal = *c2_m_a;
   c2_l_hoistedGlobal = *c2_b_R;
   c2_m_hoistedGlobal = *c2_b_Kpr;
   c2_n_hoistedGlobal = *c2_b_Lpr0;
@@ -331,30 +342,30 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   c2_Kpr = c2_m_hoistedGlobal;
   c2_Lpr0 = c2_n_hoistedGlobal;
   c2_Gamma = c2_o_hoistedGlobal;
-  sf_debug_symbol_scope_push_eml(0U, 19U, 19U, c2_debug_family_names,
+  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 19U, 19U, c2_debug_family_names,
     c2_debug_family_var_map);
-  sf_debug_symbol_scope_add_eml_importable(&c2_LTerm, 0U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_LTerm, 0U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c2_nargin, 1U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargin, 1U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml_importable(&c2_nargout, 2U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargout, 2U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  sf_debug_symbol_scope_add_eml(&c2_dT, 3U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_T, 4U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_L, 5U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_dL, 6U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_ddL, 7U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Lsr0, 8U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Ksr, 9U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_M, 10U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_C, 11U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Beta, 12U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_a, 13U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_R, 14U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Kpr, 15U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Lpr0, 16U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml(&c2_Gamma, 17U, c2_sf_marshallOut);
-  sf_debug_symbol_scope_add_eml_importable(&c2_ddT, 18U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_dT, 3U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_T, 4U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_L, 5U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_dL, 6U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_ddL, 7U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Lsr0, 8U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Ksr, 9U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_M, 10U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_C, 11U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Beta, 12U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_a, 13U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_R, 14U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Kpr, 15U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Lpr0, 16U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Gamma, 17U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_ddT, 18U, c2_sf_marshallOut,
     c2_sf_marshallIn);
   CV_EML_FCN(0, 0);
   _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 3);
@@ -404,8 +415,11 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
   c2_c_b = c2_a;
   c2_e_a = c2_d_a;
   c2_d_b = c2_c_b;
-  c2_ak = c2_e_a;
-  c2_bk = c2_d_b;
+  c2_f_a = c2_e_a;
+  c2_e_b = c2_d_b;
+  c2_eml_scalar_eg(chartInstance);
+  c2_ak = c2_f_a;
+  c2_bk = c2_e_b;
   if (c2_ak < 0.0) {
     c2_m_x = c2_bk;
     c2_n_x = c2_m_x;
@@ -415,31 +429,41 @@ static void sf_c2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct *chartInstance)
     }
   }
 
-  c2_c = muDoubleScalarPower(c2_ak, c2_bk);
-  c2_f_a = c2_k_y;
-  c2_e_b = c2_c;
-  c2_p_y = c2_f_a * c2_e_b;
-  c2_g_a = c2_p_y;
-  c2_f_b = c2_LTerm - c2_R;
-  c2_q_y = c2_g_a * c2_f_b;
-  c2_h_a = c2_Kpr;
-  c2_g_b = c2_LTerm - c2_Lpr0;
-  c2_r_y = c2_h_a * c2_g_b;
-  c2_i_a = c2_M;
-  c2_h_b = c2_ddL;
-  c2_s_y = c2_i_a * c2_h_b;
-  c2_j_a = c2_f_y;
-  c2_i_b = (((c2_q_y + c2_r_y) + c2_s_y) + c2_Gamma) - c2_T;
-  c2_ddT = c2_j_a * c2_i_b;
+  c2_g_a = c2_ak;
+  c2_f_b = c2_bk;
+  c2_eml_scalar_eg(chartInstance);
+  c2_ar = c2_g_a;
+  c2_br = c2_f_b;
+  c2_c = muDoubleScalarPower(c2_ar, c2_br);
+  c2_h_a = c2_k_y;
+  c2_g_b = c2_c;
+  c2_p_y = c2_h_a * c2_g_b;
+  c2_i_a = c2_p_y;
+  c2_h_b = c2_LTerm - c2_R;
+  c2_q_y = c2_i_a * c2_h_b;
+  c2_j_a = c2_Kpr;
+  c2_i_b = c2_LTerm - c2_Lpr0;
+  c2_r_y = c2_j_a * c2_i_b;
+  c2_k_a = c2_M;
+  c2_j_b = c2_ddL;
+  c2_s_y = c2_k_a * c2_j_b;
+  c2_l_a = c2_f_y;
+  c2_k_b = (((c2_q_y + c2_r_y) + c2_s_y) + c2_Gamma) - c2_T;
+  c2_ddT = c2_l_a * c2_k_b;
   _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, -5);
-  sf_debug_symbol_scope_pop();
+  _SFD_SYMBOL_SCOPE_POP();
   *c2_b_ddT = c2_ddT;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 1U, chartInstance->c2_sfEvent);
-  sf_debug_check_for_state_inconsistency(_MuscleSpindleMachineNumber_,
+  _SFD_CHECK_FOR_STATE_INCONSISTENCY(_MuscleSpindleMachineNumber_,
     chartInstance->chartNumber, chartInstance->instanceNumber);
 }
 
 static void initSimStructsc2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct
+  *chartInstance)
+{
+}
+
+static void registerMessagesc2_MuscleSpindle(SFc2_MuscleSpindleInstanceStruct
   *chartInstance)
 {
 }
@@ -509,15 +533,15 @@ static void c2_sf_marshallIn(void *chartInstanceVoid, const mxArray
 const mxArray *sf_c2_MuscleSpindle_get_eml_resolved_functions_info(void)
 {
   const mxArray *c2_nameCaptureInfo;
-  c2_ResolvedFunctionInfo c2_info[14];
+  c2_ResolvedFunctionInfo c2_info[17];
   const mxArray *c2_m0 = NULL;
   int32_T c2_i0;
   c2_ResolvedFunctionInfo *c2_r0;
   c2_nameCaptureInfo = NULL;
   c2_nameCaptureInfo = NULL;
   c2_info_helper(c2_info);
-  sf_mex_assign(&c2_m0, sf_mex_createstruct("nameCaptureInfo", 1, 14), FALSE);
-  for (c2_i0 = 0; c2_i0 < 14; c2_i0++) {
+  sf_mex_assign(&c2_m0, sf_mex_createstruct("nameCaptureInfo", 1, 17), FALSE);
+  for (c2_i0 = 0; c2_i0 < 17; c2_i0++) {
     c2_r0 = &c2_info[c2_i0];
     sf_mex_addfield(c2_m0, sf_mex_create("nameCaptureInfo", c2_r0->context, 15,
       0U, 0U, 0U, 2, 1, strlen(c2_r0->context)), "context", "nameCaptureInfo",
@@ -545,156 +569,180 @@ const mxArray *sf_c2_MuscleSpindle_get_eml_resolved_functions_info(void)
   return c2_nameCaptureInfo;
 }
 
-static void c2_info_helper(c2_ResolvedFunctionInfo c2_info[14])
+static void c2_info_helper(c2_ResolvedFunctionInfo c2_info[17])
 {
   c2_info[0].context = "";
   c2_info[0].name = "mrdivide";
   c2_info[0].dominantType = "double";
   c2_info[0].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mrdivide.p";
-  c2_info[0].fileTimeLo = 1325156538U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
+  c2_info[0].fileTimeLo = 1357947948U;
   c2_info[0].fileTimeHi = 0U;
-  c2_info[0].mFileTimeLo = 1319762366U;
+  c2_info[0].mFileTimeLo = 1319726366U;
   c2_info[0].mFileTimeHi = 0U;
   c2_info[1].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mrdivide.p";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mrdivide.p";
   c2_info[1].name = "rdivide";
   c2_info[1].dominantType = "double";
   c2_info[1].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/rdivide.m";
-  c2_info[1].fileTimeLo = 1286851244U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  c2_info[1].fileTimeLo = 1346506788U;
   c2_info[1].fileTimeHi = 0U;
   c2_info[1].mFileTimeLo = 0U;
   c2_info[1].mFileTimeHi = 0U;
-  c2_info[2].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/rdivide.m";
-  c2_info[2].name = "eml_div";
+  c2_info[2].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  c2_info[2].name = "eml_scalexp_compatible";
   c2_info[2].dominantType = "double";
   c2_info[2].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/eml/eml_div.m";
-  c2_info[2].fileTimeLo = 1313380210U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_compatible.m";
+  c2_info[2].fileTimeLo = 1286815196U;
   c2_info[2].fileTimeHi = 0U;
   c2_info[2].mFileTimeLo = 0U;
   c2_info[2].mFileTimeHi = 0U;
-  c2_info[3].context = "";
-  c2_info[3].name = "mtimes";
+  c2_info[3].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/rdivide.m";
+  c2_info[3].name = "eml_div";
   c2_info[3].dominantType = "double";
   c2_info[3].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mtimes.m";
-  c2_info[3].fileTimeLo = 1289552092U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_div.m";
+  c2_info[3].fileTimeLo = 1313344210U;
   c2_info[3].fileTimeHi = 0U;
   c2_info[3].mFileTimeLo = 0U;
   c2_info[3].mFileTimeHi = 0U;
   c2_info[4].context = "";
-  c2_info[4].name = "sign";
+  c2_info[4].name = "mtimes";
   c2_info[4].dominantType = "double";
-  c2_info[4].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/sign.m";
-  c2_info[4].fileTimeLo = 1286851150U;
+  c2_info[4].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mtimes.m";
+  c2_info[4].fileTimeLo = 1289516092U;
   c2_info[4].fileTimeHi = 0U;
   c2_info[4].mFileTimeLo = 0U;
   c2_info[4].mFileTimeHi = 0U;
-  c2_info[5].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/sign.m";
-  c2_info[5].name = "eml_scalar_sign";
+  c2_info[5].context = "";
+  c2_info[5].name = "sign";
   c2_info[5].dominantType = "double";
-  c2_info[5].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/eml_scalar_sign.m";
-  c2_info[5].fileTimeLo = 1307683638U;
+  c2_info[5].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sign.m";
+  c2_info[5].fileTimeLo = 1354364464U;
   c2_info[5].fileTimeHi = 0U;
   c2_info[5].mFileTimeLo = 0U;
   c2_info[5].mFileTimeHi = 0U;
-  c2_info[6].context = "";
-  c2_info[6].name = "abs";
+  c2_info[6].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/sign.m";
+  c2_info[6].name = "eml_scalar_sign";
   c2_info[6].dominantType = "double";
   c2_info[6].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/abs.m";
-  c2_info[6].fileTimeLo = 1286851094U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_sign.m";
+  c2_info[6].fileTimeLo = 1354364464U;
   c2_info[6].fileTimeHi = 0U;
   c2_info[6].mFileTimeLo = 0U;
   c2_info[6].mFileTimeHi = 0U;
-  c2_info[7].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/abs.m";
-  c2_info[7].name = "eml_scalar_abs";
+  c2_info[7].context = "";
+  c2_info[7].name = "abs";
   c2_info[7].dominantType = "double";
-  c2_info[7].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/eml_scalar_abs.m";
-  c2_info[7].fileTimeLo = 1286851112U;
+  c2_info[7].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/abs.m";
+  c2_info[7].fileTimeLo = 1343826766U;
   c2_info[7].fileTimeHi = 0U;
   c2_info[7].mFileTimeLo = 0U;
   c2_info[7].mFileTimeHi = 0U;
-  c2_info[8].context = "";
-  c2_info[8].name = "mpower";
+  c2_info[8].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/abs.m";
+  c2_info[8].name = "eml_scalar_abs";
   c2_info[8].dominantType = "double";
   c2_info[8].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mpower.m";
-  c2_info[8].fileTimeLo = 1286851242U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_abs.m";
+  c2_info[8].fileTimeLo = 1286815112U;
   c2_info[8].fileTimeHi = 0U;
   c2_info[8].mFileTimeLo = 0U;
   c2_info[8].mFileTimeHi = 0U;
-  c2_info[9].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/mpower.m";
-  c2_info[9].name = "power";
+  c2_info[9].context = "";
+  c2_info[9].name = "mpower";
   c2_info[9].dominantType = "double";
-  c2_info[9].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/power.m";
-  c2_info[9].fileTimeLo = 1307683640U;
+  c2_info[9].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mpower.m";
+  c2_info[9].fileTimeLo = 1286815242U;
   c2_info[9].fileTimeHi = 0U;
   c2_info[9].mFileTimeLo = 0U;
   c2_info[9].mFileTimeHi = 0U;
-  c2_info[10].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/power.m";
-  c2_info[10].name = "eml_scalar_eg";
+  c2_info[10].context = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/mpower.m";
+  c2_info[10].name = "power";
   c2_info[10].dominantType = "double";
-  c2_info[10].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
-  c2_info[10].fileTimeLo = 1286851196U;
+  c2_info[10].resolved = "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m";
+  c2_info[10].fileTimeLo = 1348188330U;
   c2_info[10].fileTimeHi = 0U;
   c2_info[10].mFileTimeLo = 0U;
   c2_info[10].mFileTimeHi = 0U;
   c2_info[11].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/power.m";
-  c2_info[11].name = "eml_scalexp_alloc";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m!fltpower";
+  c2_info[11].name = "eml_scalar_eg";
   c2_info[11].dominantType = "double";
   c2_info[11].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/eml/eml_scalexp_alloc.m";
-  c2_info[11].fileTimeLo = 1286851196U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
+  c2_info[11].fileTimeLo = 1286815196U;
   c2_info[11].fileTimeHi = 0U;
   c2_info[11].mFileTimeLo = 0U;
   c2_info[11].mFileTimeHi = 0U;
   c2_info[12].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/power.m";
-  c2_info[12].name = "eml_scalar_floor";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m!fltpower";
+  c2_info[12].name = "eml_scalexp_alloc";
   c2_info[12].dominantType = "double";
   c2_info[12].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/elfun/eml_scalar_floor.m";
-  c2_info[12].fileTimeLo = 1286851126U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalexp_alloc.m";
+  c2_info[12].fileTimeLo = 1352421260U;
   c2_info[12].fileTimeHi = 0U;
   c2_info[12].mFileTimeLo = 0U;
   c2_info[12].mFileTimeHi = 0U;
   c2_info[13].context =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/ops/power.m";
-  c2_info[13].name = "eml_error";
-  c2_info[13].dominantType = "char";
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m!fltpower";
+  c2_info[13].name = "floor";
+  c2_info[13].dominantType = "double";
   c2_info[13].resolved =
-    "[ILXE]/Applications/MATLAB_R2012a.app/toolbox/eml/lib/matlab/eml/eml_error.m";
-  c2_info[13].fileTimeLo = 1305350400U;
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/floor.m";
+  c2_info[13].fileTimeLo = 1343826780U;
   c2_info[13].fileTimeHi = 0U;
   c2_info[13].mFileTimeLo = 0U;
   c2_info[13].mFileTimeHi = 0U;
+  c2_info[14].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/floor.m";
+  c2_info[14].name = "eml_scalar_floor";
+  c2_info[14].dominantType = "double";
+  c2_info[14].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/elfun/eml_scalar_floor.m";
+  c2_info[14].fileTimeLo = 1286815126U;
+  c2_info[14].fileTimeHi = 0U;
+  c2_info[14].mFileTimeLo = 0U;
+  c2_info[14].mFileTimeHi = 0U;
+  c2_info[15].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m!fltpower";
+  c2_info[15].name = "eml_error";
+  c2_info[15].dominantType = "char";
+  c2_info[15].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_error.m";
+  c2_info[15].fileTimeLo = 1343826758U;
+  c2_info[15].fileTimeHi = 0U;
+  c2_info[15].mFileTimeLo = 0U;
+  c2_info[15].mFileTimeHi = 0U;
+  c2_info[16].context =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/ops/power.m!scalar_float_power";
+  c2_info[16].name = "eml_scalar_eg";
+  c2_info[16].dominantType = "double";
+  c2_info[16].resolved =
+    "[ILXE]$matlabroot$/toolbox/eml/lib/matlab/eml/eml_scalar_eg.m";
+  c2_info[16].fileTimeLo = 1286815196U;
+  c2_info[16].fileTimeHi = 0U;
+  c2_info[16].mFileTimeLo = 0U;
+  c2_info[16].mFileTimeHi = 0U;
+}
+
+static void c2_eml_scalar_eg(SFc2_MuscleSpindleInstanceStruct *chartInstance)
+{
 }
 
 static void c2_eml_error(SFc2_MuscleSpindleInstanceStruct *chartInstance)
 {
   int32_T c2_i1;
-  static char_T c2_varargin_1[31] = { 'C', 'o', 'd', 'e', 'r', ':', 't', 'o',
-    'o', 'l', 'b', 'o', 'x', ':', 'p', 'o', 'w', 'e', 'r', '_', 'd', 'o', 'm',
-    'a', 'i', 'n', 'E', 'r', 'r', 'o', 'r' };
+  static char_T c2_cv0[31] = { 'C', 'o', 'd', 'e', 'r', ':', 't', 'o', 'o', 'l',
+    'b', 'o', 'x', ':', 'p', 'o', 'w', 'e', 'r', '_', 'd', 'o', 'm', 'a', 'i',
+    'n', 'E', 'r', 'r', 'o', 'r' };
 
   char_T c2_u[31];
   const mxArray *c2_y = NULL;
   for (c2_i1 = 0; c2_i1 < 31; c2_i1++) {
-    c2_u[c2_i1] = c2_varargin_1[c2_i1];
+    c2_u[c2_i1] = c2_cv0[c2_i1];
   }
 
   c2_y = NULL;
@@ -781,12 +829,32 @@ static void init_dsm_address_info(SFc2_MuscleSpindleInstanceStruct
 }
 
 /* SFunction Glue Code */
+#ifdef utFree
+#undef utFree
+#endif
+
+#ifdef utMalloc
+#undef utMalloc
+#endif
+
+#ifdef __cplusplus
+
+extern "C" void *utMalloc(size_t size);
+extern "C" void utFree(void*);
+
+#else
+
+extern void *utMalloc(size_t size);
+extern void utFree(void*);
+
+#endif
+
 void sf_c2_MuscleSpindle_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(1647964782U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3482713306U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2656741442U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(614443288U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3012444427U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3880677165U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(2476074965U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(941600096U);
 }
 
 mxArray *sf_c2_MuscleSpindle_get_autoinheritance_info(void)
@@ -798,7 +866,7 @@ mxArray *sf_c2_MuscleSpindle_get_autoinheritance_info(void)
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("7Epm3D04SGhkoANuUOnVaF");
+    mxArray *mxChecksum = mxCreateString("8Dr9owGEF7LDFB9VDrdquF");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -1132,6 +1200,12 @@ mxArray *sf_c2_MuscleSpindle_get_autoinheritance_info(void)
   return(mxAutoinheritanceInfo);
 }
 
+mxArray *sf_c2_MuscleSpindle_third_party_uses_info(void)
+{
+  mxArray * mxcell3p = mxCreateCellMatrix(1,0);
+  return(mxcell3p);
+}
+
 static const mxArray *sf_get_sim_state_info_c2_MuscleSpindle(void)
 {
   const char *infoFields[] = { "chartChecksum", "varInfo" };
@@ -1161,7 +1235,8 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
       {
         unsigned int chartAlreadyPresent;
         chartAlreadyPresent = sf_debug_initialize_chart
-          (_MuscleSpindleMachineNumber_,
+          (sfGlobalDebugInstanceStruct,
+           _MuscleSpindleMachineNumber_,
            2,
            1,
            1,
@@ -1180,8 +1255,10 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           init_script_number_translation(_MuscleSpindleMachineNumber_,
             chartInstance->chartNumber);
           sf_debug_set_chart_disable_implicit_casting
-            (_MuscleSpindleMachineNumber_,chartInstance->chartNumber,1);
-          sf_debug_set_chart_event_thresholds(_MuscleSpindleMachineNumber_,
+            (sfGlobalDebugInstanceStruct,_MuscleSpindleMachineNumber_,
+             chartInstance->chartNumber,1);
+          sf_debug_set_chart_event_thresholds(sfGlobalDebugInstanceStruct,
+            _MuscleSpindleMachineNumber_,
             chartInstance->chartNumber,
             0,
             0,
@@ -1216,7 +1293,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         _SFD_CV_INIT_TRANS(0,0,NULL,NULL,0,NULL);
 
         /* Initialization of MATLAB Function Model Coverage */
-        _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0);
+        _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
         _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,341);
         _SFD_TRANS_COV_WTS(0,0,0,1,0);
         if (chartAlreadyPresent==0) {
@@ -1312,15 +1389,16 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
         }
       }
     } else {
-      sf_debug_reset_current_state_configuration(_MuscleSpindleMachineNumber_,
-        chartInstance->chartNumber,chartInstance->instanceNumber);
+      sf_debug_reset_current_state_configuration(sfGlobalDebugInstanceStruct,
+        _MuscleSpindleMachineNumber_,chartInstance->chartNumber,
+        chartInstance->instanceNumber);
     }
   }
 }
 
-static const char* sf_get_instance_specialization()
+static const char* sf_get_instance_specialization(void)
 {
-  return "vS4hkj9wASYLpg5pFEfJZG";
+  return "dkEDKYu5K2XI8jBbmLQ2HF";
 }
 
 static void sf_opaque_initialize_c2_MuscleSpindle(void *chartInstanceVar)
@@ -1415,15 +1493,14 @@ static void sf_opaque_terminate_c2_MuscleSpindle(void *chartInstanceVar)
     SimStruct *S = ((SFc2_MuscleSpindleInstanceStruct*) chartInstanceVar)->S;
     if (sim_mode_is_rtw_gen(S) || sim_mode_is_external(S)) {
       sf_clear_rtw_identifier(S);
+      unload_MuscleSpindle_optimization_info();
     }
 
     finalize_c2_MuscleSpindle((SFc2_MuscleSpindleInstanceStruct*)
       chartInstanceVar);
-    free((void *)chartInstanceVar);
+    utFree((void *)chartInstanceVar);
     ssSetUserData(S,NULL);
   }
-
-  unload_MuscleSpindle_optimization_info();
 }
 
 static void sf_opaque_init_subchart_simstructs(void *chartInstanceVar)
@@ -1463,6 +1540,7 @@ static void mdlSetWorkWidths_c2_MuscleSpindle(SimStruct *S)
     ssSetNotMultipleInlinable(S,sf_rtw_info_uint_prop(S,
       sf_get_instance_specialization(),infoStruct,2,
       "gatewayCannotBeInlinedMultipleTimes"));
+    sf_update_buildInfo(S,sf_get_instance_specialization(),infoStruct,2);
     if (chartIsInlinable) {
       ssSetInputPortOptimOpts(S, 0, SS_REUSABLE_AND_LOCAL);
       ssSetInputPortOptimOpts(S, 1, SS_REUSABLE_AND_LOCAL);
@@ -1485,18 +1563,33 @@ static void mdlSetWorkWidths_c2_MuscleSpindle(SimStruct *S)
         infoStruct,2,1);
     }
 
+    {
+      unsigned int outPortIdx;
+      for (outPortIdx=1; outPortIdx<=1; ++outPortIdx) {
+        ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
+      }
+    }
+
+    {
+      unsigned int inPortIdx;
+      for (inPortIdx=0; inPortIdx < 15; ++inPortIdx) {
+        ssSetInputPortOptimizeInIR(S, inPortIdx, 1U);
+      }
+    }
+
     sf_set_rtw_dwork_info(S,sf_get_instance_specialization(),infoStruct,2);
     ssSetHasSubFunctions(S,!(chartIsInlinable));
   } else {
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(654543777U));
-  ssSetChecksum1(S,(1984327007U));
-  ssSetChecksum2(S,(1865630177U));
-  ssSetChecksum3(S,(335866748U));
+  ssSetChecksum0(S,(1664659505U));
+  ssSetChecksum1(S,(223035732U));
+  ssSetChecksum2(S,(782984642U));
+  ssSetChecksum3(S,(4178786634U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
+  ssSupportsMultipleExecInstances(S,1);
 }
 
 static void mdlRTW_c2_MuscleSpindle(SimStruct *S)
@@ -1509,7 +1602,7 @@ static void mdlRTW_c2_MuscleSpindle(SimStruct *S)
 static void mdlStart_c2_MuscleSpindle(SimStruct *S)
 {
   SFc2_MuscleSpindleInstanceStruct *chartInstance;
-  chartInstance = (SFc2_MuscleSpindleInstanceStruct *)malloc(sizeof
+  chartInstance = (SFc2_MuscleSpindleInstanceStruct *)utMalloc(sizeof
     (SFc2_MuscleSpindleInstanceStruct));
   memset(chartInstance, 0, sizeof(SFc2_MuscleSpindleInstanceStruct));
   if (chartInstance==NULL) {
